@@ -46,6 +46,10 @@ local Window = WindUI:CreateWindow({
 		KeyValidator = function(key)
 			return key == "HelloWorld"
 		end,
+	},
+	User = {
+		Enabled = true,
+		Anonymous = false,
 	}
 })
 

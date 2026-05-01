@@ -203,12 +203,13 @@ return function(Config)
 	--     }
 	-- })
 
+	local userProfileOffset = Window.User.Enabled and (48 + Window.UIPadding + Window.UIPadding + 6) or 0
 	Window.UIElements.SideBar = New("ScrollingFrame", {
 		Size = UDim2.new(
 			1,
 			Window.ScrollBarEnabled and -3 - (Window.UIPadding / 2) or 0,
 			1,
-			not Window.HideSearchBar and -39 - 6 or 0
+			-userProfileOffset + (not Window.HideSearchBar and -39 - 6 or 0)
 		),
 		Position = UDim2.new(0, 0, 1, 0),
 		AnchorPoint = Vector2.new(0, 1),
@@ -252,9 +253,9 @@ return function(Config)
 			0,
 			Window.SideBarWidth,
 			1,
-			Window.User.Enabled and -Window.Topbar.Height - 42 - (Window.UIPadding * 2) or -Window.Topbar.Height
+			-(Window.UIPadding)
 		),
-		Position = UDim2.new(0, 0, 0, Window.Topbar.Height),
+		Position = UDim2.new(0, 0, 0, Window.UIPadding / 2),
 		BackgroundTransparency = 1,
 		Visible = true,
 	}, {
@@ -273,7 +274,7 @@ return function(Config)
 	end
 
 	Window.UIElements.MainBar = New("Frame", {
-		Size = UDim2.new(1, -Window.UIElements.SideBarContainer.AbsoluteSize.X, 1, -Window.Topbar.Height),
+		Size = UDim2.new(1, -Window.UIElements.SideBarContainer.AbsoluteSize.X, 1, -4),
 		Position = UDim2.new(1, 0, 1, 0),
 		AnchorPoint = Vector2.new(1, 1),
 		BackgroundTransparency = 1,
@@ -284,14 +285,11 @@ return function(Config)
 				ImageColor3 = "PanelBackground",
 				ImageTransparency = "PanelBackgroundTransparency",
 			},
-			-- ImageColor3 = Color3.new(1,1,1),
-			-- ImageTransparency = .95,
 			ZIndex = 3,
 			Name = "Background",
 			Visible = not Window.HidePanelBackground,
 		}),
 		New("UIPadding", {
-			--PaddingTop = UDim.new(0,Window.UIPadding/2),
 			PaddingLeft = UDim.new(0, Window.UIPadding / 2),
 			PaddingRight = UDim.new(0, Window.UIPadding / 2),
 			PaddingBottom = UDim.new(0, Window.UIPadding / 2),
@@ -341,15 +339,16 @@ return function(Config)
 
 		UserIcon = New("TextButton", {
 			Size = UDim2.new(
+				1,
+				-(Window.UIPadding),
 				0,
-				Window.UIElements.SideBarContainer.AbsoluteSize.X - (Window.UIPadding / 2),
-				0,
-				42 + Window.UIPadding
+				48 + Window.UIPadding
 			),
-			Position = UDim2.new(0, Window.UIPadding / 2, 1, -(Window.UIPadding / 2)),
-			AnchorPoint = Vector2.new(0, 1),
+			Position = UDim2.new(0, Window.UIPadding / 2, 0, Window.UIPadding / 2),
+			AnchorPoint = Vector2.new(0, 0),
 			BackgroundTransparency = 1,
 			Visible = Window.User.Enabled or false,
+			Name = "UserIconBtn",
 		}, {
 			Creator.NewRoundFrame(Window.UICorner - (Window.UIPadding / 2), "SquircleOutline", {
 				Size = UDim2.new(1, 0, 1, 0),
@@ -444,27 +443,44 @@ return function(Config)
 			}),
 		})
 
+		-- Divider below user profile in sidebar
+		local UserDivider = New("Frame", {
+			Size = UDim2.new(1, -(Window.UIPadding * 2), 0, 1),
+			Position = UDim2.new(0.5, 0, 0, (48 + Window.UIPadding) + Window.UIPadding),
+			AnchorPoint = Vector2.new(0.5, 0),
+			BackgroundTransparency = 0.8,
+			ThemeTag = {
+				BackgroundColor3 = "Text",
+			},
+			Visible = Window.User.Enabled or false,
+			Name = "UserDivider",
+		})
+		UserIcon.Parent = Window.UIElements.SideBarContainer
+		UserDivider.Parent = Window.UIElements.SideBarContainer
+
 		function Window.User:Enable()
 			Window.User.Enabled = true
-			Tween(
-				Window.UIElements.SideBarContainer,
-				0.25,
-				{ Size = UDim2.new(0, Window.SideBarWidth, 1, -Window.Topbar.Height - 42 - (Window.UIPadding * 2)) },
-				Enum.EasingStyle.Quint,
-				Enum.EasingDirection.Out
-			):Play()
 			UserIcon.Visible = true
+			UserDivider.Visible = true
+			-- Adjust sidebar scrolling frame to account for user profile
+			Window.UIElements.SideBar.Position = UDim2.new(0, 0, 1, 0)
+			Window.UIElements.SideBar.Size = UDim2.new(
+				1,
+				Window.ScrollBarEnabled and -3 - (Window.UIPadding / 2) or 0,
+				1,
+				-(48 + Window.UIPadding + Window.UIPadding + 6) + (not Window.HideSearchBar and -39 - 6 or 0)
+			)
 		end
 		function Window.User:Disable()
 			Window.User.Enabled = false
-			Tween(
-				Window.UIElements.SideBarContainer,
-				0.25,
-				{ Size = UDim2.new(0, Window.SideBarWidth, 1, -Window.Topbar.Height) },
-				Enum.EasingStyle.Quint,
-				Enum.EasingDirection.Out
-			):Play()
 			UserIcon.Visible = false
+			UserDivider.Visible = false
+			Window.UIElements.SideBar.Size = UDim2.new(
+				1,
+				Window.ScrollBarEnabled and -3 - (Window.UIPadding / 2) or 0,
+				1,
+				not Window.HideSearchBar and -39 - 6 or 0
+			)
 		end
 		function Window.User:SetAnonymous(v)
 			if v ~= false then
@@ -739,27 +755,51 @@ return function(Config)
 			Window.UIElements.SideBarContainer,
 			Window.UIElements.MainBar,
 
+			-- Floating window control buttons on content area
+			New("Frame", {
+				Size = UDim2.new(0, 120, 0, 36),
+				Position = UDim2.new(1, -(Window.UIPadding), 0, Window.UIPadding / 2),
+				AnchorPoint = Vector2.new(1, 0),
+				BackgroundTransparency = 1,
+				ZIndex = 9999,
+				Name = "FloatingButtons",
+			}, {
+				New("UIListLayout", {
+					Padding = UDim.new(0, Window.Topbar.ButtonsType == "Default" and 6 or 0),
+					FillDirection = "Horizontal",
+					SortOrder = "LayoutOrder",
+					HorizontalAlignment = "Right",
+					VerticalAlignment = "Center",
+				}),
+			}),
+
 			UserIcon,
 
 			Outline2,
-			New("Frame", { -- Topbar
-				Size = UDim2.new(1, 0, 0, Window.Topbar.Height),
+			-- Topbar reduced to thin 4px separator line
+			New("Frame", {
+				Size = UDim2.new(1, -Window.UIElements.SideBarContainer.AbsoluteSize.X - (Window.UIPadding), 0, 4),
+				Position = UDim2.new(1, -(Window.UIPadding / 2), 0, 0),
+				AnchorPoint = Vector2.new(1, 0),
 				BackgroundTransparency = 1,
-				BackgroundColor3 = Color3.fromRGB(50, 50, 50),
 				Name = "Topbar",
 			}, {
 				Outline1,
-				--[[New("Frame", { -- Outline
-                    Size = UDim2.new(1,Window.UIPadding*2, 0, 1),
-                    Position = UDim2.new(0,-Window.UIPadding, 1,Window.UIPadding-2),
-                    BackgroundTransparency = 0.9,
-                    BackgroundColor3 = Color3.fromHex(Config.Theme.Outline),
-                }),]]
-				New("Frame", { -- Topbar Left Side
+				-- Thin separator line
+				New("Frame", {
+					Size = UDim2.new(1, -Window.UIPadding, 0, 1),
+					Position = UDim2.new(0.5, 0, 0.5, 0),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundTransparency = 0.85,
+					BackgroundColor3 = Color3.new(0, 0, 0),
+					Name = "ThinLine",
+				}),
+				New("Frame", { -- Topbar Left Side (hidden, kept for API compat)
 					AutomaticSize = "X",
 					Size = UDim2.new(0, 0, 1, 0),
 					BackgroundTransparency = 1,
 					Name = "Left",
+					Visible = false,
 				}, {
 					New("UIListLayout", {
 						Padding = UDim.new(0, Window.UIPadding + 4),
@@ -807,12 +847,13 @@ return function(Config)
 						Padding = UDim.new(0, Window.UIPadding / 2),
 					}),
 				}),
-				New("Frame", { -- Topbar Right Side -- Window.UIElements.Main.Main.Topbar.Right
+				New("Frame", { -- Topbar Right Side (hidden, buttons go to FloatingButtons)
 					AutomaticSize = "XY",
 					BackgroundTransparency = 1,
 					Position = UDim2.new(Window.Topbar.ButtonsType == "Default" and 1 or 0, 0, 0.5, 0),
 					AnchorPoint = Vector2.new(Window.Topbar.ButtonsType == "Default" and 1 or 0, 0.5),
 					Name = "Right",
+					Visible = false,
 				}, {
 					New("UIListLayout", {
 						Padding = UDim.new(0, Window.Topbar.ButtonsType == "Default" and 9 or 0),
@@ -821,13 +862,10 @@ return function(Config)
 					}),
 				}),
 				New("UIPadding", {
-					PaddingTop = UDim.new(0, Window.UIPadding),
-					PaddingLeft = UDim.new(
-						0,
-						Window.Topbar.ButtonsType == "Default" and Window.UIPadding or Window.UIPadding - 2
-					),
-					PaddingRight = UDim.new(0, 8),
-					PaddingBottom = UDim.new(0, Window.UIPadding),
+					PaddingTop = UDim.new(0, 0),
+					PaddingLeft = UDim.new(0, 0),
+					PaddingRight = UDim.new(0, 0),
+					PaddingBottom = UDim.new(0, 0),
 				}),
 			}),
 		}),
@@ -930,9 +968,9 @@ return function(Config)
 
 		local ButtonContainer = New("Frame", {
 			Size = Window.Topbar.ButtonsType ~= "Default" and UDim2.new(0, 24, 0, 24)
-				or UDim2.new(0, Window.Topbar.Height - 16, 0, Window.Topbar.Height - 16),
+				or UDim2.new(0, 28, 0, 28),
 			BackgroundTransparency = 1,
-			Parent = Window.UIElements.Main.Main.Topbar.Right,
+			Parent = Window.UIElements.Main.Main.FloatingButtons,
 			LayoutOrder = LayoutOrder or 999,
 		}, {
 			Button,
@@ -1030,11 +1068,9 @@ return function(Config)
 		)
 	end
 
-	-- local Dragged = false
-
 	local WindowDragModule = Creator.Drag(
 		Window.UIElements.Main,
-		{ Window.UIElements.Main.Main.Topbar, BottomDragFrame.Frame },
+		{ Window.UIElements.SideBarContainer, Window.UIElements.Main.Main.FloatingButtons, BottomDragFrame.Frame },
 		function(dragging, frame) -- On drag
 			if not Window.Closed then
 				if dragging and frame == BottomDragFrame.Frame then
@@ -1197,7 +1233,7 @@ return function(Config)
 		Tween(
 			Window.UIElements.Main,
 			0.45,
-			{ Size = isFullscreen and CurrentSize or UDim2.new(1, -20, 1, -20 - 52) },
+			{ Size = isFullscreen and CurrentSize or UDim2.new(1, -20, 1, -20) },
 			Enum.EasingStyle.Quint,
 			Enum.EasingDirection.Out
 		):Play()
@@ -1205,7 +1241,7 @@ return function(Config)
 		Tween(
 			Window.UIElements.Main,
 			0.45,
-			{ Position = isFullscreen and CurrentPos or UDim2.new(0.5, 0, 0.5, 52 / 2) },
+			{ Position = isFullscreen and CurrentPos or UDim2.new(0.5, 0, 0.5, 0) },
 			Enum.EasingStyle.Quint,
 			Enum.EasingDirection.Out
 		):Play()
@@ -2057,9 +2093,10 @@ return function(Config)
 		--     Window.CanResize = false
 		-- end, 996)
 
+		local searchOffset = Window.User.Enabled and (48 + Window.UIPadding + Window.UIPadding + 6) or 0
 		local SearchLabel = CreateLabel("Search", "search", Window.UIElements.SideBarContainer, true)
 		SearchLabel.Size = UDim2.new(1, -Window.UIPadding / 2, 0, 39)
-		SearchLabel.Position = UDim2.new(0, Window.UIPadding / 2, 0,--[[Window.UIPadding/2]] 0)
+		SearchLabel.Position = UDim2.new(0, Window.UIPadding / 2, 0, searchOffset)
 
 		Creator.AddSignal(SearchLabel.MouseButton1Click, function()
 			if IsOpen then
