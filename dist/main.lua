@@ -13564,7 +13564,7 @@ aa.DynamicIsland=ap("TextButton",{
 Name="DynamicIsland",
 Parent=aa.ScreenGui,
 Size=UDim2.new(0,au,0,au),
-Position=UDim2.new(0,210,0,8),
+Position=UDim2.new(0,210,0,10),
 BackgroundColor3=Color3.new(0,0,0),
 BackgroundTransparency=0.3,
 Text="",
@@ -13619,15 +13619,8 @@ TextTransparency=1,
 })
 
 ao.AddSignal(aa.DynamicIsland.MouseButton1Click,function()
-if aa.Window and aa.Window.UIElements and aa.Window.UIElements.Main then
-local ax=aa.Window.UIElements.Main
-if ax.Visible then
-
-ax.Visible=false
-else
-
-ax.Visible=true
-end
+if aa.Window then
+aa.Window:Toggle()
 end
 end)
 
@@ -13644,15 +13637,17 @@ local aB=aA.Icon
 local b=aA.Content
 
 b.Title.Text=az.Title or"Notification"
-b.Desc.Text=az.Content or""
+local d=az.Content or az.Desc or""
+b.Desc.Text=d
+b.Desc.Visible=(d~="")
 
 
-local d=math.max(b.Title.TextBounds.X,b.Desc.TextBounds.X)+30
-local f=math.max(av,d)
+local f=math.max(b.Title.TextBounds.X,b.Desc.TextBounds.X)+30
+local g=math.max(av,f)
 
 
 ao.Tween(aB,0.2,{ImageTransparency=1}):Play()
-ao.Tween(aA,0.4,{Size=UDim2.new(0,f,0,aw)},Enum.EasingStyle.Back,Enum.EasingDirection.Out):Play()
+ao.Tween(aA,0.4,{Size=UDim2.new(0,g,0,aw)},Enum.EasingStyle.Back,Enum.EasingDirection.Out):Play()
 
 task.wait(0.2)
 b.Visible=true

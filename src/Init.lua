@@ -137,7 +137,7 @@ WindUI.DynamicIsland = New("TextButton", {
 	Name = "DynamicIsland",
 	Parent = WindUI.ScreenGui,
 	Size = UDim2.new(0, IslandSize, 0, IslandSize),
-	Position = UDim2.new(0, 210, 0, 8),
+	Position = UDim2.new(0, 210, 0, 10),
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	BackgroundTransparency = 0.3,
 	Text = "",
@@ -192,15 +192,8 @@ WindUI.DynamicIsland = New("TextButton", {
 })
 
 Creator.AddSignal(WindUI.DynamicIsland.MouseButton1Click, function()
-	if WindUI.Window and WindUI.Window.UIElements and WindUI.Window.UIElements.Main then
-		local Main = WindUI.Window.UIElements.Main
-		if Main.Visible then
-			-- Toggle Off (ẩn UI)
-			Main.Visible = false
-		else
-			-- Toggle On (hiện UI)
-			Main.Visible = true
-		end
+	if WindUI.Window then
+		WindUI.Window:Toggle()
 	end
 end)
 
@@ -217,7 +210,9 @@ local function ProcessNotification()
 	local Content = Island.Content
 
 	Content.Title.Text = Config.Title or "Notification"
-	Content.Desc.Text = Config.Content or ""
+	local descText = Config.Content or Config.Desc or ""
+	Content.Desc.Text = descText
+	Content.Desc.Visible = (descText ~= "")
 
 	-- Tính toán kích thước tối thiểu cần thiết
 	local textWidth = math.max(Content.Title.TextBounds.X, Content.Desc.TextBounds.X) + 30
