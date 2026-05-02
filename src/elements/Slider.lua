@@ -110,6 +110,7 @@ function Element:New(Config)
         Index = Config.Index,
         Window = Config.Window,
         ElementTable = Slider,
+        Transparent = true,
         ParentConfig = Config,
     })
     

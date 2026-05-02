@@ -5149,6 +5149,7 @@ Justify=af.Justify or"Between",
 UIPadding=af.Window.ElementConfig.UIPadding,
 UICorner=af.Window.ElementConfig.UICorner,
 Size=af.Size or"Default",
+Transparent=af.Transparent or false,
 UIElements={},
 
 Index=af.Index,
@@ -5455,8 +5456,9 @@ ImageTransparency=ag.Color and 0.05 or nil,
 Parent=af.Parent,
 ThemeTag={
 ImageColor3=not ag.Color and"ElementBackground"or nil,
-ImageTransparency=not ag.Color and"ElementBackgroundTransparency"or nil,
+ImageTransparency=(not ag.Color and not ag.Transparent)and"ElementBackgroundTransparency"or nil,
 },
+ImageTransparency=ag.Transparent and 1 or(ag.Color and 0.05 or nil),
 ImageColor3=ag.Color and(typeof(ag.Color)=="string"and Color3.fromHex(
 aa.Colors[ag.Color]
 )or typeof(ag.Color)=="Color3"and ag.Color)or nil,
@@ -6374,6 +6376,7 @@ Hover=false,
 Tab=ah.Tab,
 Index=ah.Index,
 ElementTable=ai,
+Transparent=true,
 ParentConfig=ah,
 }
 
@@ -6566,6 +6569,7 @@ Tab=ak.Tab,
 Index=ak.Index,
 Window=ak.Window,
 ElementTable=al,
+Transparent=true,
 ParentConfig=ak,
 }
 
@@ -12021,6 +12025,7 @@ Position=UDim2.new(1,-(au.UIPadding),0,au.UIPadding/2),
 AnchorPoint=Vector2.new(1,0),
 BackgroundTransparency=1,
 ZIndex=9999,
+Active=false,
 Name="FloatingButtons",
 },{
 am("UIListLayout",{
@@ -12041,6 +12046,7 @@ Size=UDim2.new(1,-au.UIElements.SideBarContainer.AbsoluteSize.X-(au.UIPadding),0
 Position=UDim2.new(1,-(au.UIPadding/2),0,0),
 AnchorPoint=Vector2.new(1,0),
 BackgroundTransparency=1,
+Active=false,
 Name="Topbar",
 },{
 d,

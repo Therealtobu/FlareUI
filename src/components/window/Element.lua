@@ -141,6 +141,7 @@ return function(Config)
 		UIPadding = Config.Window.ElementConfig.UIPadding,
 		UICorner = Config.Window.ElementConfig.UICorner,
 		Size = Config.Size or "Default", -- Small, Default, Large
+		Transparent = Config.Transparent or false,
 		UIElements = {},
 
 		Index = Config.Index,
@@ -447,8 +448,9 @@ return function(Config)
 		Parent = Config.Parent,
 		ThemeTag = {
 			ImageColor3 = not Element.Color and "ElementBackground" or nil,
-			ImageTransparency = not Element.Color and "ElementBackgroundTransparency" or nil,
+			ImageTransparency = (not Element.Color and not Element.Transparent) and "ElementBackgroundTransparency" or nil,
 		},
+		ImageTransparency = Element.Transparent and 1 or (Element.Color and 0.05 or nil),
 		ImageColor3 = Element.Color and (typeof(Element.Color) == "string" and Color3.fromHex(
 			Creator.Colors[Element.Color]
 		) or typeof(Element.Color) == "Color3" and Element.Color) or nil,

@@ -762,6 +762,7 @@ return function(Config)
 				AnchorPoint = Vector2.new(1, 0),
 				BackgroundTransparency = 1,
 				ZIndex = 9999,
+				Active = false,
 				Name = "FloatingButtons",
 			}, {
 				New("UIListLayout", {
@@ -782,6 +783,7 @@ return function(Config)
 				Position = UDim2.new(1, -(Window.UIPadding / 2), 0, 0),
 				AnchorPoint = Vector2.new(1, 0),
 				BackgroundTransparency = 1,
+				Active = false,
 				Name = "Topbar",
 			}, {
 				Outline1,

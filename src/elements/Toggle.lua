@@ -35,6 +35,7 @@ function Element:New(Config)
         Tab = Config.Tab,
         Index = Config.Index,
         ElementTable = Toggle,
+        Transparent = true,
         ParentConfig = Config,
     })
     
