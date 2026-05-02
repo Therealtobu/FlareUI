@@ -137,7 +137,7 @@ WindUI.DynamicIsland = New("TextButton", {
 	Name = "DynamicIsland",
 	Parent = WindUI.ScreenGui,
 	Size = UDim2.new(0, IslandSize, 0, IslandSize),
-	Position = UDim2.new(0, 273, 0, 4),
+	Position = UDim2.new(0, 273, 0, 6),
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	BackgroundTransparency = 0.3,
 	Text = "",
@@ -147,7 +147,7 @@ WindUI.DynamicIsland = New("TextButton", {
 	New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 	New("ImageLabel", {
 		Name = "Icon",
-		Size = UDim2.new(0, 20, 0, 20),
+		Size = UDim2.new(0, 28, 0, 28),
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
