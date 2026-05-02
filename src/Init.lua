@@ -129,15 +129,15 @@ math.clamp(WindUI.TransparencyValue, 0, 1)
 
 -- local Holder = WindUI.NotificationModule.Init(WindUI.NotificationGui)
 
-local IslandSize = 32
+local IslandSize = 44
 local IslandExpandedWidth = 250
-local IslandExpandedHeight = 40
+local IslandExpandedHeight = 44
 
 WindUI.DynamicIsland = New("TextButton", {
 	Name = "DynamicIsland",
 	Parent = WindUI.ScreenGui,
 	Size = UDim2.new(0, IslandSize, 0, IslandSize),
-	Position = UDim2.new(0, 273, 0, 10), -- Tương đương với Y -26 nếu không bỏ qua GUI Inset
+	Position = UDim2.new(0, 273, 0, 24),
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	BackgroundTransparency = 0.3,
 	Text = "",

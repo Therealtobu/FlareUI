@@ -1112,7 +1112,7 @@ return function(Config)
 	--     OpenButtonDragModule = Creator.Drag(OpenButtonContainer)
 	-- end
 
-	Window.OpenButtonMain = require("./Openbutton").New(Window)
+	-- Window.OpenButtonMain = require("./Openbutton").New(Window)
 
 	task.spawn(function()
 		if Window.Icon then

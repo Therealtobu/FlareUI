@@ -4851,291 +4851,6 @@ local ac=ab.New
 local ad=ab.Tween
 
 
-local ae=(cloneref or clonereference or function(ae)return ae end)
-
-
-ae(game:GetService"UserInputService")
-
-
-function aa.New(af)
-local ag={
-Button=nil
-}
-
-local ah
-
-
-
-
-
-
-
-
-
-
-
-
-
-local ai=ac("TextLabel",{
-Text=af.Title,
-TextSize=17,
-FontFace=Font.new(ab.Font,Enum.FontWeight.Medium),
-BackgroundTransparency=1,
-AutomaticSize="XY",
-})
-
-local aj=ac("Frame",{
-Size=UDim2.new(0,36,0,36),
-BackgroundTransparency=1,
-Name="Drag",
-},{
-ac("ImageLabel",{
-Image=ab.Icon"move"[1],
-ImageRectOffset=ab.Icon"move"[2].ImageRectPosition,
-ImageRectSize=ab.Icon"move"[2].ImageRectSize,
-Size=UDim2.new(0,18,0,18),
-BackgroundTransparency=1,
-Position=UDim2.new(0.5,0,0.5,0),
-AnchorPoint=Vector2.new(0.5,0.5),
-ThemeTag={
-ImageColor3="Icon",
-},
-ImageTransparency=.3,
-})
-})
-local ak=ac("Frame",{
-Size=UDim2.new(0,1,1,0),
-Position=UDim2.new(0,36,0.5,0),
-AnchorPoint=Vector2.new(0,0.5),
-BackgroundColor3=Color3.new(1,1,1),
-BackgroundTransparency=.9,
-})
-
-local al=ac("Frame",{
-Size=UDim2.new(0,0,0,0),
-Position=UDim2.new(0.5,0,0,28),
-AnchorPoint=Vector2.new(0.5,0.5),
-Parent=af.Parent,
-BackgroundTransparency=1,
-Active=true,
-Visible=false,
-})
-
-
-local am=ac("UIScale",{
-Scale=1,
-})
-
-local an=ac("Frame",{
-Size=UDim2.new(0,0,0,44),
-AutomaticSize="X",
-Parent=al,
-Active=false,
-BackgroundTransparency=.25,
-ZIndex=99,
-BackgroundColor3=Color3.new(0,0,0),
-},{
-am,
-ac("UICorner",{
-CornerRadius=UDim.new(1,0)
-}),
-ac("UIStroke",{
-Thickness=1,
-ApplyStrokeMode="Border",
-Color=Color3.new(1,1,1),
-Transparency=0,
-},{
-ac("UIGradient",{
-Color=ColorSequence.new(Color3.fromHex"40c9ff",Color3.fromHex"e81cff")
-})
-}),
-aj,
-ak,
-
-ac("UIListLayout",{
-Padding=UDim.new(0,4),
-FillDirection="Horizontal",
-VerticalAlignment="Center",
-}),
-
-ac("TextButton",{
-AutomaticSize="XY",
-Active=true,
-BackgroundTransparency=1,
-Size=UDim2.new(0,0,0,36),
-
-BackgroundColor3=Color3.new(1,1,1),
-},{
-ac("UICorner",{
-CornerRadius=UDim.new(1,-4)
-}),
-ah,
-ac("UIListLayout",{
-Padding=UDim.new(0,af.UIPadding),
-FillDirection="Horizontal",
-VerticalAlignment="Center",
-}),
-ai,
-ac("UIPadding",{
-PaddingLeft=UDim.new(0,11),
-PaddingRight=UDim.new(0,11),
-}),
-}),
-ac("UIPadding",{
-PaddingLeft=UDim.new(0,4),
-PaddingRight=UDim.new(0,4),
-})
-})
-
-ag.Button=an
-
-
-
-function ag.SetIcon(ao,ap)
-if ah then
-ah:Destroy()
-end
-if ap then
-ah=ab.Image(
-ap,
-af.Title,
-0,
-af.Folder,
-"OpenButton",
-true,
-af.IconThemed
-)
-ah.Size=UDim2.new(0,22,0,22)
-ah.LayoutOrder=-1
-ah.Parent=ag.Button.TextButton
-end
-end
-
-if af.Icon then
-ag:SetIcon(af.Icon)
-end
-
-
-
-ab.AddSignal(an:GetPropertyChangedSignal"AbsoluteSize",function()
-al.Size=UDim2.new(
-0,an.AbsoluteSize.X,
-0,an.AbsoluteSize.Y
-)
-end)
-
-ab.AddSignal(an.TextButton.MouseEnter,function()
-ad(an.TextButton,.1,{BackgroundTransparency=.93}):Play()
-end)
-ab.AddSignal(an.TextButton.MouseLeave,function()
-ad(an.TextButton,.1,{BackgroundTransparency=1}):Play()
-end)
-
-local ao=ab.Drag(al)
-
-
-function ag.Visible(ap,aq)
-al.Visible=aq
-end
-
-function ag.SetScale(ap,aq)
-am.Scale=aq
-end
-
-function ag.Edit(ap,aq)
-local ar={
-Title=aq.Title,
-Icon=aq.Icon,
-Enabled=aq.Enabled,
-Position=aq.Position,
-OnlyIcon=aq.OnlyIcon or false,
-Draggable=aq.Draggable or nil,
-OnlyMobile=aq.OnlyMobile,
-CornerRadius=aq.CornerRadius or UDim.new(1,0),
-StrokeThickness=aq.StrokeThickness or 2,
-Scale=aq.Scale or 1,
-Color=aq.Color
-or ColorSequence.new(Color3.fromHex"40c9ff",Color3.fromHex"e81cff"),
-}
-
-
-
-if ar.Enabled==false then
-af.IsOpenButtonEnabled=false
-end
-
-if ar.OnlyMobile~=false then
-ar.OnlyMobile=true
-else
-af.IsPC=false
-end
-
-
-if ar.Draggable==false and aj and ak then
-aj.Visible=ar.Draggable
-ak.Visible=ar.Draggable
-
-if ao then
-ao:Set(ar.Draggable)
-end
-end
-
-if ar.Position and al then
-al.Position=ar.Position
-end
-
-if ar.OnlyIcon==true and ai then
-ai.Visible=false
-an.TextButton.UIPadding.PaddingLeft=UDim.new(0,7)
-an.TextButton.UIPadding.PaddingRight=UDim.new(0,7)
-elseif ar.OnlyIcon==false then
-ai.Visible=true
-an.TextButton.UIPadding.PaddingLeft=UDim.new(0,11)
-an.TextButton.UIPadding.PaddingRight=UDim.new(0,11)
-end
-
-
-
-
-
-if ai then
-if ar.Title then
-ai.Text=ar.Title
-ab:ChangeTranslationKey(ai,ar.Title)
-elseif ar.Title==nil then
-
-end
-end
-
-if ar.Icon then
-ag:SetIcon(ar.Icon)
-end
-
-an.UIStroke.UIGradient.Color=ar.Color
-if Glow then
-Glow.UIGradient.Color=ar.Color
-end
-
-an.UICorner.CornerRadius=ar.CornerRadius
-an.TextButton.UICorner.CornerRadius=UDim.new(ar.CornerRadius.Scale,ar.CornerRadius.Offset-4)
-an.UIStroke.Thickness=ar.StrokeThickness
-
-ag:SetScale(ar.Scale)
-end
-
-return ag
-end
-
-
-
-return aa end function a.A()
-local aa={}
-
-local ab=a.load'c'
-local ac=ab.New
-local ad=ab.Tween
-
-
 function aa.New(ae,af,ag,ah,ai,aj)
 local ak={
 Container=nil,
@@ -5290,7 +5005,7 @@ end
 
 
 
-return aa end function a.B()
+return aa end function a.A()
 game:GetService"ReplicatedStorage"
 local aa=a.load'c'
 local ab=aa.New
@@ -6022,7 +5737,7 @@ end
 
 
 return ag
-end end function a.C()
+end end function a.B()
 
 local aa=a.load'c'
 local ab=aa.New
@@ -6044,7 +5759,7 @@ Desc=af.Desc or nil,
 
 Locked=af.Locked or false,
 }
-local ah=a.load'B'(af)
+local ah=a.load'A'(af)
 
 ag.ParagraphFrame=ah
 if af.Buttons and#af.Buttons>0 then
@@ -6079,7 +5794,7 @@ end
 return ag.__type,ag
 end
 
-return ac end function a.D()
+return ac end function a.C()
 
 local aa=a.load'c'local ab=
 aa.New
@@ -6104,7 +5819,7 @@ UIElements={}
 
 local ag=true
 
-af.ButtonFrame=a.load'B'{
+af.ButtonFrame=a.load'A'{
 Title=af.Title,
 Desc=af.Desc,
 Parent=ae.Parent,
@@ -6181,7 +5896,7 @@ end)
 return af.__type,af
 end
 
-return ac end function a.E()
+return ac end function a.D()
 local aa={}
 
 local ab=a.load'c'
@@ -6521,7 +6236,7 @@ end
 return ap,am
 end
 
-return aa end function a.F()
+return aa end function a.E()
 local aa={}
 
 local ab=a.load'c'local ac=
@@ -6621,13 +6336,13 @@ return an,ak
 end
 
 
-return aa end function a.G()
+return aa end function a.F()
 local aa=a.load'c'local ab=
 aa.New local ac=
 aa.Tween
 
-local ad=a.load'E'.New
-local ae=a.load'F'.New
+local ad=a.load'D'.New
+local ae=a.load'E'.New
 
 local af={}
 
@@ -6645,7 +6360,7 @@ Type=ah.Type or"Toggle",
 Callback=ah.Callback or function()end,
 UIElements={}
 }
-ai.ToggleFrame=a.load'B'{
+ai.ToggleFrame=a.load'A'{
 Title=ai.Title,
 Desc=ai.Desc,
 
@@ -6738,7 +6453,7 @@ end
 return ai.__type,ai
 end
 
-return af end function a.H()
+return af end function a.G()
 local aa=(cloneref or clonereference or function(aa)return aa end)
 
 
@@ -6841,7 +6556,7 @@ av.Size=UDim2.new(0,al.IconSize,0,al.IconSize)
 aw=aw+al.IconSize-2
 end
 end
-al.SliderFrame=a.load'B'{
+al.SliderFrame=a.load'A'{
 Title=al.Title,
 Desc=al.Desc,
 Parent=ak.Parent,
@@ -6942,7 +6657,7 @@ Visible=al.IsTextbox,
 
 local ax
 if al.IsTooltip then
-ax=a.load'A'.New(ap,al.UIElements.SliderIcon.Frame.Thumb,true,"Secondary","Small",false)
+ax=a.load'z'.New(ap,al.UIElements.SliderIcon.Frame.Thumb,true,"Secondary","Small",false)
 ax.Container.AnchorPoint=Vector2.new(0.5,1)
 ax.Container.Position=UDim2.new(0.5,0,0,-8)
 end
@@ -7091,7 +6806,7 @@ end)
 return al.__type,al
 end
 
-return ah end function a.I()
+return ah end function a.H()
 local aa=(cloneref or clonereference or function(aa)return aa end)
 
 local ac=aa(game:GetService"UserInputService")
@@ -7133,7 +6848,7 @@ UIElements={},
 
 local al=true
 
-ak.KeybindFrame=a.load'B'{
+ak.KeybindFrame=a.load'A'{
 Title=ak.Title,
 Desc=ak.Desc,
 Parent=aj.Parent,
@@ -7252,7 +6967,7 @@ end)
 return ak.__type,ak
 end
 
-return ag end function a.J()
+return ag end function a.I()
 local aa=a.load'c'
 local ac=aa.New local ad=
 aa.Tween
@@ -7286,7 +7001,7 @@ Width=150,
 
 local ak=true
 
-aj.InputFrame=a.load'B'{
+aj.InputFrame=a.load'A'{
 Title=aj.Title,
 Desc=aj.Desc,
 Parent=ai.Parent,
@@ -7362,7 +7077,7 @@ end
 return aj.__type,aj
 end
 
-return ae end function a.K()
+return ae end function a.J()
 local aa=a.load'c'
 local ac=aa.New
 
@@ -7389,7 +7104,7 @@ ah
 return"Divider",{__type="Divider",ElementFrame=ai}
 end
 
-return ae end function a.L()
+return ae end function a.K()
 local aa={}
 
 local ac=(cloneref or clonereference or function(ac)
@@ -7919,7 +7634,7 @@ end
 
 RecalculateCanvasSize()
 RecalculateListSize()
-else a.load'K'
+else a.load'J'
 :New{Parent=an.UIElements.Menu.Frame.ScrollingFrame}
 end
 end
@@ -8049,7 +7764,7 @@ UpdatePosition
 return ar
 end
 
-return aa end function a.M()
+return aa end function a.L()
 
 local aa=(cloneref or clonereference or function(aa)
 return aa
@@ -8065,7 +7780,7 @@ ae.Tween
 
 local ah=a.load'v'.New local ai=a.load'm'
 .New
-local aj=a.load'L'.New local ak=
+local aj=a.load'K'.New local ak=
 
 workspace.CurrentCamera
 
@@ -8111,7 +7826,7 @@ end
 
 local ap=true
 
-ao.DropdownFrame=a.load'B'{
+ao.DropdownFrame=a.load'A'{
 Title=ao.Title,
 Desc=ao.Desc,
 Parent=an.Parent,
@@ -8182,7 +7897,7 @@ end
 return ao.__type,ao
 end
 
-return al end function a.N()
+return al end function a.M()
 
 
 
@@ -8355,14 +8070,14 @@ end
 return table.concat(ar)
 end
 
-return aa end function a.O()
+return aa end function a.N()
 local aa={}
 
 local ae=a.load'c'
 local af=ae.New
 local ah=ae.Tween
 
-local aj=a.load'N'
+local aj=a.load'M'
 
 function aa.New(ak,al,am,an,ao)
 local ap={
@@ -8565,12 +8280,12 @@ return ap
 end
 
 
-return aa end function a.P()
+return aa end function a.O()
 local aa=a.load'c'local ae=
 aa.New
 
 
-local af=a.load'O'
+local af=a.load'N'
 
 local ah={}
 
@@ -8632,7 +8347,7 @@ al.ElementFrame=an.CodeFrame
 return al.__type,al
 end
 
-return ah end function a.Q()
+return ah end function a.P()
 local aa=a.load'c'
 local ae=aa.New local af=
 aa.Tween
@@ -9283,7 +8998,7 @@ local av=true
 
 
 
-au.ColorpickerFrame=a.load'B'{
+au.ColorpickerFrame=a.load'A'{
 Title=au.Title,
 Desc=au.Desc,
 Parent=at.Parent,
@@ -9351,7 +9066,7 @@ end)
 return au.__type,au
 end
 
-return ar end function a.R()
+return ar end function a.Q()
 local aa=a.load'c'
 local ae=aa.New
 local af=aa.Tween
@@ -9680,7 +9395,7 @@ end)
 return al.__type,al
 end
 
-return ah end function a.S()
+return ah end function a.R()
 
 local aa=a.load'c'
 local ae=aa.New
@@ -9697,7 +9412,7 @@ BackgroundTransparency=1,
 return"Space",{__type="Space",ElementFrame=ak}
 end
 
-return af end function a.T()
+return af end function a.S()
 local aa=a.load'c'
 local ae=aa.New
 
@@ -9766,7 +9481,7 @@ end
 return ak.__type,ak
 end
 
-return af end function a.U()
+return af end function a.T()
 local aa=a.load'c'
 local ae=aa.New
 
@@ -9851,7 +9566,7 @@ aj.Tab
 return ak.__type,ak
 end
 
-return af end function a.V()
+return af end function a.U()
 local aa=a.load'c'
 local ae=aa.New
 
@@ -9950,7 +9665,7 @@ end
 return ak.__type,ak
 end
 
-return af end function a.W()
+return af end function a.V()
 local aa=a.load'c'
 local ae=aa.New
 
@@ -10036,25 +9751,25 @@ aj.Tab
 return ak.__type,ak
 end
 
-return af end function a.X()
+return af end function a.W()
 return{
 Elements={
-Paragraph=a.load'C',
-Button=a.load'D',
-Toggle=a.load'G',
-Slider=a.load'H',
-Keybind=a.load'I',
-Input=a.load'J',
-Dropdown=a.load'M',
-Code=a.load'P',
-Colorpicker=a.load'Q',
-Section=a.load'R',
-Divider=a.load'K',
-Space=a.load'S',
-Image=a.load'T',
-Group=a.load'U',
-HStack=a.load'V',
-VStack=a.load'W',
+Paragraph=a.load'B',
+Button=a.load'C',
+Toggle=a.load'F',
+Slider=a.load'G',
+Keybind=a.load'H',
+Input=a.load'I',
+Dropdown=a.load'L',
+Code=a.load'O',
+Colorpicker=a.load'P',
+Section=a.load'Q',
+Divider=a.load'J',
+Space=a.load'R',
+Image=a.load'S',
+Group=a.load'T',
+HStack=a.load'U',
+VStack=a.load'V',
 
 },
 Load=function(aa,ae,af,ah,aj,ak,al,am,an)
@@ -10179,7 +9894,7 @@ end
 end
 end
 end,
-}end function a.Y()
+}end function a.X()
 
 local aa=(cloneref or clonereference or function(aa)
 return aa
@@ -10193,7 +9908,7 @@ local af=ae.LocalPlayer:GetMouse()
 local ah=a.load'c'
 local aj=ah.New
 
-local ak=a.load'A'.New
+local ak=a.load'z'.New
 local al=a.load'w'.New
 
 
@@ -10618,7 +10333,7 @@ end
 
 
 
-local ay=a.load'X'
+local ay=a.load'W'
 
 ay.Load(
 ap,
@@ -10815,7 +10530,7 @@ am.OnChangeFunc(ao)
 end
 end
 
-return am end function a.Z()
+return am end function a.Y()
 
 local aa={}
 
@@ -10824,7 +10539,7 @@ local ae=a.load'c'
 local af=ae.New
 local ah=ae.Tween
 
-local aj=a.load'Y'
+local aj=a.load'X'
 
 function aa.New(ak,al,am,an,ao)
 local ap={
@@ -10993,7 +10708,7 @@ return ap
 end
 
 
-return aa end function a._()
+return aa end function a.Z()
 return{
 Tab="table-of-contents",
 Paragraph="type",
@@ -11005,7 +10720,7 @@ Input="text-cursor-input",
 Dropdown="chevrons-up-down",
 Code="terminal",
 Colorpicker="palette",
-}end function a.aa()
+}end function a._()
 local aa=(cloneref or clonereference or function(aa)
 return aa
 end)
@@ -11029,7 +10744,7 @@ Radius=22,
 Width=400,
 MaxHeight=380,
 
-Icons=a.load'_',
+Icons=a.load'Z',
 }
 
 local ao=ah("TextBox",{
@@ -11540,7 +11255,7 @@ end)
 return an
 end
 
-return ae end function a.ab()
+return ae end function a.aa()
 
 
 
@@ -12656,7 +12371,7 @@ end
 
 
 
-au.OpenButtonMain=a.load'z'.New(au)
+
 
 task.spawn(function()
 if au.Icon then
@@ -13175,8 +12890,8 @@ if au.OpenButton and typeof(au.OpenButton)=="table"then
 au:EditOpenButton(au.OpenButton)
 end
 
-local A=a.load'Y'
-local B=a.load'Z'
+local A=a.load'X'
+local B=a.load'Y'
 local C=A.Init(au,at.WindUI,at.WindUI.TooltipGui)
 C:OnChange(function(F)
 au.CurrentTab=F
@@ -13614,7 +13329,7 @@ end)
 
 
 if not au.HideSearchBar then
-local N=a.load'aa'
+local N=a.load'_'
 local O=false
 
 
@@ -13837,15 +13552,15 @@ math.clamp(aa.TransparencyValue,0,1)
 
 
 
-local au=32
+local au=44
 local av=250
-local aw=40
+local aw=44
 
 aa.DynamicIsland=ap("TextButton",{
 Name="DynamicIsland",
 Parent=aa.ScreenGui,
 Size=UDim2.new(0,au,0,au),
-Position=UDim2.new(0,273,0,10),
+Position=UDim2.new(0,273,0,24),
 BackgroundColor3=Color3.new(0,0,0),
 BackgroundTransparency=0.3,
 Text="",
@@ -14089,7 +13804,7 @@ aa:SetTheme"Dark"
 aa:SetLanguage(ao.Language)
 
 function aa.CreateWindow(az,aA)
-local aB=a.load'ab'
+local aB=a.load'aa'
 
 if not ak:IsStudio()and writefile then
 if not isfolder"WindUI"then
