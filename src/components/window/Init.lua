@@ -1137,7 +1137,9 @@ return function(Config)
 			WindowIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
 			WindowIcon.AnchorPoint = Vector2.new(0.5, 0.5)
 
-			Window.OpenButtonMain:SetIcon(Window.Icon)
+			if Window.OpenButtonMain then
+				Window.OpenButtonMain:SetIcon(Window.Icon)
+			end
 
 			-- if Creator.Icon(tostring(Window.Icon)) and Creator.Icon(tostring(Window.Icon))[1] then
 			--     -- ImageLabel.Image = Creator.Icon(Window.Icon)[1]
@@ -1149,7 +1151,7 @@ return function(Config)
 
 			-- end
 			-- end
-		else
+		elseif Window.OpenButtonMain then
 			Window.OpenButtonMain:SetIcon(Window.Icon)
 			--OpenButtonIcon.Visible = false
 		end
@@ -1624,7 +1626,9 @@ return function(Config)
 	end)
 
 	function Window:EditOpenButton(OpenButtonConfig)
-		return Window.OpenButtonMain:Edit(OpenButtonConfig)
+		if Window.OpenButtonMain then
+			return Window.OpenButtonMain:Edit(OpenButtonConfig)
+		end
 	end
 
 	if Window.OpenButton and typeof(Window.OpenButton) == "table" then

@@ -12396,7 +12396,9 @@ r.Size=UDim2.new(0,au.IconSize,0,au.IconSize)
 r.Position=UDim2.new(0.5,0,0.5,0)
 r.AnchorPoint=Vector2.new(0.5,0.5)
 
+if au.OpenButtonMain then
 au.OpenButtonMain:SetIcon(au.Icon)
+end
 
 
 
@@ -12408,7 +12410,7 @@ au.OpenButtonMain:SetIcon(au.Icon)
 
 
 
-else
+elseif au.OpenButtonMain then
 au.OpenButtonMain:SetIcon(au.Icon)
 
 end
@@ -12883,7 +12885,9 @@ au:Open()
 end)
 
 function au.EditOpenButton(A,B)
+if au.OpenButtonMain then
 return au.OpenButtonMain:Edit(B)
+end
 end
 
 if au.OpenButton and typeof(au.OpenButton)=="table"then
