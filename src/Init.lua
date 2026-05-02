@@ -127,17 +127,136 @@ function WindUI:SetParent(parent)
 end
 math.clamp(WindUI.TransparencyValue, 0, 1)
 
-local Holder = WindUI.NotificationModule.Init(WindUI.NotificationGui)
+-- local Holder = WindUI.NotificationModule.Init(WindUI.NotificationGui)
+
+local IslandSize = 32
+local IslandExpandedWidth = 250
+local IslandExpandedHeight = 40
+
+WindUI.DynamicIsland = New("TextButton", {
+	Name = "DynamicIsland",
+	Parent = WindUI.ScreenGui,
+	Size = UDim2.new(0, IslandSize, 0, IslandSize),
+	Position = UDim2.new(0, 273, 0, 10), -- Tương đương với Y -26 nếu không bỏ qua GUI Inset
+	BackgroundColor3 = Color3.new(0, 0, 0),
+	BackgroundTransparency = 0.3,
+	Text = "",
+	ZIndex = 9999999,
+	AutoButtonColor = false,
+}, {
+	New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+	New("ImageLabel", {
+		Name = "Icon",
+		Size = UDim2.new(0, 20, 0, 20),
+		Position = UDim2.new(0.5, 0, 0.5, 0),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1,
+		Image = "rbxassetid://139056174427730",
+	}),
+	New("Frame", {
+		Name = "Content",
+		Size = UDim2.new(1, -20, 1, 0),
+		Position = UDim2.new(0, 10, 0, 0),
+		BackgroundTransparency = 1,
+		ClipsDescendants = true,
+		Visible = false,
+	}, {
+		New("UIListLayout", {
+			FillDirection = "Vertical",
+			VerticalAlignment = "Center",
+			Padding = UDim.new(0, 2),
+		}),
+		New("TextLabel", {
+			Name = "Title",
+			Size = UDim2.new(1, 0, 0, 14),
+			BackgroundTransparency = 1,
+			Text = "Notification",
+			TextColor3 = Color3.new(1, 1, 1),
+			TextXAlignment = "Left",
+			FontFace = Font.new(Creator.Font, Enum.FontWeight.SemiBold),
+			TextSize = 14,
+			TextTransparency = 1,
+		}),
+		New("TextLabel", {
+			Name = "Desc",
+			Size = UDim2.new(1, 0, 0, 12),
+			BackgroundTransparency = 1,
+			Text = "Message content",
+			TextColor3 = Color3.new(0.8, 0.8, 0.8),
+			TextXAlignment = "Left",
+			FontFace = Font.new(Creator.Font, Enum.FontWeight.Regular),
+			TextSize = 12,
+			TextTransparency = 1,
+		})
+	})
+})
+
+Creator.AddSignal(WindUI.DynamicIsland.MouseButton1Click, function()
+	if WindUI.Window and WindUI.Window.UIElements and WindUI.Window.UIElements.Main then
+		local Main = WindUI.Window.UIElements.Main
+		if Main.Visible then
+			-- Toggle Off (ẩn UI)
+			Main.Visible = false
+		else
+			-- Toggle On (hiện UI)
+			Main.Visible = true
+		end
+	end
+end)
+
+local isNotifying = false
+local NotificationQueue = {}
+
+local function ProcessNotification()
+	if isNotifying or #NotificationQueue == 0 then return end
+	isNotifying = true
+
+	local Config = table.remove(NotificationQueue, 1)
+	local Island = WindUI.DynamicIsland
+	local Icon = Island.Icon
+	local Content = Island.Content
+
+	Content.Title.Text = Config.Title or "Notification"
+	Content.Desc.Text = Config.Content or ""
+
+	-- Tính toán kích thước tối thiểu cần thiết
+	local textWidth = math.max(Content.Title.TextBounds.X, Content.Desc.TextBounds.X) + 30
+	local targetWidth = math.max(IslandExpandedWidth, textWidth)
+
+	-- Bước 1: Mờ icon, phình to
+	Creator.Tween(Icon, 0.2, { ImageTransparency = 1 }):Play()
+	Creator.Tween(Island, 0.4, { Size = UDim2.new(0, targetWidth, 0, IslandExpandedHeight) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out):Play()
+	
+	task.wait(0.2)
+	Content.Visible = true
+	Creator.Tween(Content.Title, 0.2, { TextTransparency = 0 }):Play()
+	Creator.Tween(Content.Desc, 0.2, { TextTransparency = 0 }):Play()
+
+	-- Bước 2: Chờ thời gian
+	task.wait(Config.Duration or 3)
+
+	-- Bước 3: Thu nhỏ, hiện lại icon
+	Creator.Tween(Content.Title, 0.2, { TextTransparency = 1 }):Play()
+	Creator.Tween(Content.Desc, 0.2, { TextTransparency = 1 }):Play()
+	
+	task.wait(0.2)
+	Content.Visible = false
+	Creator.Tween(Island, 0.4, { Size = UDim2.new(0, IslandSize, 0, IslandSize) }, Enum.EasingStyle.Back, Enum.EasingDirection.InOut):Play()
+	task.wait(0.2)
+	Creator.Tween(Icon, 0.2, { ImageTransparency = 0 }):Play()
+	
+	task.wait(0.3)
+	isNotifying = false
+	ProcessNotification()
+end
 
 function WindUI:Notify(Config)
-	Config.Holder = Holder.Frame
-	Config.Window = WindUI.Window
-	--Config.WindUI = WindUI
-	return WindUI.NotificationModule.New(Config)
+	table.insert(NotificationQueue, Config)
+	ProcessNotification()
 end
 
 function WindUI:SetNotificationLower(Val)
-	Holder.SetLower(Val)
+	-- Holder.SetLower(Val) -- Bỏ qua vì đã dùng Dynamic Island
 end
 
 function WindUI:SetFont(FontId)

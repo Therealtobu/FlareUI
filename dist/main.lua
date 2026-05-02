@@ -13835,74 +13835,193 @@ end
 end
 math.clamp(aa.TransparencyValue,0,1)
 
-local au=aa.NotificationModule.Init(aa.NotificationGui)
 
-function aa.Notify(av,aw)
-aw.Holder=au.Frame
-aw.Window=aa.Window
 
-return aa.NotificationModule.New(aw)
+local au=32
+local av=250
+local aw=40
+
+aa.DynamicIsland=ap("TextButton",{
+Name="DynamicIsland",
+Parent=aa.ScreenGui,
+Size=UDim2.new(0,au,0,au),
+Position=UDim2.new(0,273,0,10),
+BackgroundColor3=Color3.new(0,0,0),
+BackgroundTransparency=0.3,
+Text="",
+ZIndex=9999999,
+AutoButtonColor=false,
+},{
+ap("UICorner",{CornerRadius=UDim.new(1,0)}),
+ap("ImageLabel",{
+Name="Icon",
+Size=UDim2.new(0,20,0,20),
+Position=UDim2.new(0.5,0,0.5,0),
+AnchorPoint=Vector2.new(0.5,0.5),
+BackgroundTransparency=1,
+Image="rbxassetid://139056174427730",
+}),
+ap("Frame",{
+Name="Content",
+Size=UDim2.new(1,-20,1,0),
+Position=UDim2.new(0,10,0,0),
+BackgroundTransparency=1,
+ClipsDescendants=true,
+Visible=false,
+},{
+ap("UIListLayout",{
+FillDirection="Vertical",
+VerticalAlignment="Center",
+Padding=UDim.new(0,2),
+}),
+ap("TextLabel",{
+Name="Title",
+Size=UDim2.new(1,0,0,14),
+BackgroundTransparency=1,
+Text="Notification",
+TextColor3=Color3.new(1,1,1),
+TextXAlignment="Left",
+FontFace=Font.new(ao.Font,Enum.FontWeight.SemiBold),
+TextSize=14,
+TextTransparency=1,
+}),
+ap("TextLabel",{
+Name="Desc",
+Size=UDim2.new(1,0,0,12),
+BackgroundTransparency=1,
+Text="Message content",
+TextColor3=Color3.new(0.8,0.8,0.8),
+TextXAlignment="Left",
+FontFace=Font.new(ao.Font,Enum.FontWeight.Regular),
+TextSize=12,
+TextTransparency=1,
+})
+})
+})
+
+ao.AddSignal(aa.DynamicIsland.MouseButton1Click,function()
+if aa.Window and aa.Window.UIElements and aa.Window.UIElements.Main then
+local ax=aa.Window.UIElements.Main
+if ax.Visible then
+
+ax.Visible=false
+else
+
+ax.Visible=true
+end
+end
+end)
+
+local ax=false
+local ay={}
+
+local function ProcessNotification()
+if ax or#ay==0 then return end
+ax=true
+
+local az=table.remove(ay,1)
+local aA=aa.DynamicIsland
+local aB=aA.Icon
+local b=aA.Content
+
+b.Title.Text=az.Title or"Notification"
+b.Desc.Text=az.Content or""
+
+
+local d=math.max(b.Title.TextBounds.X,b.Desc.TextBounds.X)+30
+local f=math.max(av,d)
+
+
+ao.Tween(aB,0.2,{ImageTransparency=1}):Play()
+ao.Tween(aA,0.4,{Size=UDim2.new(0,f,0,aw)},Enum.EasingStyle.Back,Enum.EasingDirection.Out):Play()
+
+task.wait(0.2)
+b.Visible=true
+ao.Tween(b.Title,0.2,{TextTransparency=0}):Play()
+ao.Tween(b.Desc,0.2,{TextTransparency=0}):Play()
+
+
+task.wait(az.Duration or 3)
+
+
+ao.Tween(b.Title,0.2,{TextTransparency=1}):Play()
+ao.Tween(b.Desc,0.2,{TextTransparency=1}):Play()
+
+task.wait(0.2)
+b.Visible=false
+ao.Tween(aA,0.4,{Size=UDim2.new(0,au,0,au)},Enum.EasingStyle.Back,Enum.EasingDirection.InOut):Play()
+task.wait(0.2)
+ao.Tween(aB,0.2,{ImageTransparency=0}):Play()
+
+task.wait(0.3)
+ax=false
+ProcessNotification()
 end
 
-function aa.SetNotificationLower(av,aw)
-au.SetLower(aw)
+function aa.Notify(az,aA)
+table.insert(ay,aA)
+ProcessNotification()
 end
 
-function aa.SetFont(av,aw)
-ao.UpdateFont(aw)
+function aa.SetNotificationLower(az,aA)
+
 end
 
-function aa.OnThemeChange(av,aw)
-aa.OnThemeChangeFunction=aw
+function aa.SetFont(az,aA)
+ao.UpdateFont(aA)
 end
 
-function aa.AddTheme(av,aw)
-aa.Themes[aw.Name]=aw
-return aw
+function aa.OnThemeChange(az,aA)
+aa.OnThemeChangeFunction=aA
 end
 
-function aa.SetTheme(av,aw)
-if aa.Themes[aw]then
-aa.Theme=aa.Themes[aw]
-ao.SetTheme(aa.Themes[aw])
+function aa.AddTheme(az,aA)
+aa.Themes[aA.Name]=aA
+return aA
+end
+
+function aa.SetTheme(az,aA)
+if aa.Themes[aA]then
+aa.Theme=aa.Themes[aA]
+ao.SetTheme(aa.Themes[aA])
 
 if aa.OnThemeChangeFunction then
-aa.OnThemeChangeFunction(aw)
+aa.OnThemeChangeFunction(aA)
 end
 
-return aa.Themes[aw]
+return aa.Themes[aA]
 end
 return nil
 end
 
-function aa.GetThemes(av)
+function aa.GetThemes(az)
 return aa.Themes
 end
-function aa.GetCurrentTheme(av)
+function aa.GetCurrentTheme(az)
 return aa.Theme.Name
 end
-function aa.GetTransparency(av)
+function aa.GetTransparency(az)
 return aa.Transparent or false
 end
-function aa.GetWindowSize(av)
+function aa.GetWindowSize(az)
 return aa.Window.UIElements.Main.Size
 end
-function aa.Localization(av,aw)
-return aa.LocalizationModule:New(aw,ao)
+function aa.Localization(az,aA)
+return aa.LocalizationModule:New(aA,ao)
 end
 
-function aa.SetLanguage(av,aw)
+function aa.SetLanguage(az,aA)
 if ao.Localization then
-return ao.SetLanguage(aw)
+return ao.SetLanguage(aA)
 end
 return false
 end
 
-function aa.ToggleAcrylic(av,aw)
+function aa.ToggleAcrylic(az,aA)
 if aa.Window and aa.Window.AcrylicPaint and aa.Window.AcrylicPaint.Model then
-aa.Window.Acrylic=aw
-aa.Window.AcrylicPaint.Model.Transparency=aw and 0.98 or 1
-if aw then
+aa.Window.Acrylic=aA
+aa.Window.AcrylicPaint.Model.Transparency=aA and 0.98 or 1
+if aA then
 aq.Enable()
 else
 aq.Disable()
@@ -13910,56 +14029,56 @@ end
 end
 end
 
-function aa.Gradient(av,aw,ax)
-local ay={}
-local az={}
+function aa.Gradient(az,aA,aB)
+local b={}
+local d={}
 
-for aA,aB in next,aw do
-local b=tonumber(aA)
-if b then
-b=math.clamp(b/100,0,1)
+for f,g in next,aA do
+local h=tonumber(f)
+if h then
+h=math.clamp(h/100,0,1)
 
-local d=aB.Color
-if typeof(d)=="string"and string.sub(d,1,1)=="#"then
-d=Color3.fromHex(d)
+local j=g.Color
+if typeof(j)=="string"and string.sub(j,1,1)=="#"then
+j=Color3.fromHex(j)
 end
 
-local f=aB.Transparency or 0
+local l=g.Transparency or 0
 
-table.insert(ay,ColorSequenceKeypoint.new(b,d))
-table.insert(az,NumberSequenceKeypoint.new(b,f))
+table.insert(b,ColorSequenceKeypoint.new(h,j))
+table.insert(d,NumberSequenceKeypoint.new(h,l))
 end
 end
 
-table.sort(ay,function(aA,aB)
-return aA.Time<aB.Time
+table.sort(b,function(f,g)
+return f.Time<g.Time
 end)
-table.sort(az,function(aA,aB)
-return aA.Time<aB.Time
+table.sort(d,function(f,g)
+return f.Time<g.Time
 end)
 
-if#ay<2 then
-table.insert(ay,ColorSequenceKeypoint.new(1,ay[1].Value))
-table.insert(az,NumberSequenceKeypoint.new(1,az[1].Value))
+if#b<2 then
+table.insert(b,ColorSequenceKeypoint.new(1,b[1].Value))
+table.insert(d,NumberSequenceKeypoint.new(1,d[1].Value))
 end
 
-local aA={
-Color=ColorSequence.new(ay),
-Transparency=NumberSequence.new(az),
+local f={
+Color=ColorSequence.new(b),
+Transparency=NumberSequence.new(d),
 }
 
-if ax then
-for aB,b in pairs(ax)do
-aA[aB]=b
+if aB then
+for g,h in pairs(aB)do
+f[g]=h
 end
 end
 
-return aA
+return f
 end
 
-function aa.Popup(av,aw)
-aw.WindUI=aa
-return a.load't'.new(aw,aa.ScreenGui.Popups)
+function aa.Popup(az,aA)
+aA.WindUI=aa
+return a.load't'.new(aA,aa.ScreenGui.Popups)
 end
 
 aa.Themes=a.load'u'(aa,ao)
@@ -13969,74 +14088,74 @@ ao.Themes=aa.Themes
 aa:SetTheme"Dark"
 aa:SetLanguage(ao.Language)
 
-function aa.CreateWindow(av,aw)
-local ax=a.load'ab'
+function aa.CreateWindow(az,aA)
+local aB=a.load'ab'
 
 if not ak:IsStudio()and writefile then
 if not isfolder"WindUI"then
 makefolder"WindUI"
 end
-if aw.Folder then
-makefolder(aw.Folder)
+if aA.Folder then
+makefolder(aA.Folder)
 else
-makefolder(aw.Title)
+makefolder(aA.Title)
 end
 end
 
-aw.WindUI=aa
-aw.Window=aa.Window
-aw.Parent=aa.ScreenGui.Window
+aA.WindUI=aa
+aA.Window=aa.Window
+aA.Parent=aa.ScreenGui.Window
 
 if aa.Window then
 warn"You cannot create more than one window"
 return
 end
 
-local ay=true
+local b=true
 
-local az=aa.Themes[aw.Theme or"Dark"]
+local d=aa.Themes[aA.Theme or"Dark"]
 
 
-ao.SetTheme(az)
+ao.SetTheme(d)
 
-local aA=gethwid or function()
+local f=gethwid or function()
 return ah.LocalPlayer.UserId
 end
 
-local aB=aA()
+local g=f()
 
-if aw.KeySystem then
-ay=false
+if aA.KeySystem then
+b=false
 
 local function loadKeysystem()
-an.new(aw,aB,function(b)
-ay=b
+an.new(aA,g,function(h)
+b=h
 end)
 end
 
-local b=(aw.Folder or"Temp").."/"..aB..".key"
+local h=(aA.Folder or"Temp").."/"..g..".key"
 
-if aw.KeySystem.KeyValidator then
-if aw.KeySystem.SaveKey and isfile(b)then
-local d=readfile(b)
-local f=aw.KeySystem.KeyValidator(d)
+if aA.KeySystem.KeyValidator then
+if aA.KeySystem.SaveKey and isfile(h)then
+local j=readfile(h)
+local l=aA.KeySystem.KeyValidator(j)
 
-if f then
-ay=true
+if l then
+b=true
 else
 loadKeysystem()
 end
 else
 loadKeysystem()
 end
-elseif not aw.KeySystem.API then
-if aw.KeySystem.SaveKey and isfile(b)then
-local d=readfile(b)
-local f=(type(aw.KeySystem.Key)=="table")and table.find(aw.KeySystem.Key,d)
-or tostring(aw.KeySystem.Key)==tostring(d)
+elseif not aA.KeySystem.API then
+if aA.KeySystem.SaveKey and isfile(h)then
+local j=readfile(h)
+local l=(type(aA.KeySystem.Key)=="table")and table.find(aA.KeySystem.Key,j)
+or tostring(aA.KeySystem.Key)==tostring(j)
 
-if f then
-ay=true
+if l then
+b=true
 else
 loadKeysystem()
 end
@@ -14044,29 +14163,29 @@ else
 loadKeysystem()
 end
 else
-if isfile(b)then
-local d=readfile(b)
-local f=false
+if isfile(h)then
+local j=readfile(h)
+local l=false
 
-for g,h in next,aw.KeySystem.API do
-local j=aa.Services[h.Type]
-if j then
-local l={}
-for m,p in next,j.Args do
-table.insert(l,h[p])
+for m,p in next,aA.KeySystem.API do
+local r=aa.Services[p.Type]
+if r then
+local u={}
+for v,x in next,r.Args do
+table.insert(u,p[x])
 end
 
-local m=j.New(table.unpack(l))
-local p=m.Verify(d)
-if p then
-f=true
+local v=r.New(table.unpack(u))
+local x=v.Verify(j)
+if x then
+l=true
 break
 end
 end
 end
 
-ay=f
-if not f then
+b=l
+if not l then
 loadKeysystem()
 end
 else
@@ -14076,15 +14195,15 @@ end
 
 repeat
 task.wait()
-until ay
+until b
 end
 
-local b=ax(aw)
+local h=aB(aA)
 
-aa.Transparent=aw.Transparent
-aa.Window=b
+aa.Transparent=aA.Transparent
+aa.Window=h
 
-if aw.Acrylic then
+if aA.Acrylic then
 aq.init()
 end
 
@@ -14100,7 +14219,7 @@ end
 
 
 
-return b
+return h
 end
 
 return aa
