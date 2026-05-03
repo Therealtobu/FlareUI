@@ -485,14 +485,13 @@ function WindUI:CreateWindow(Config)
 		until CanLoadWindow
 	end
 
+	if Config.Acrylic then
+		Acrylic.init()
+	end
 	local Window = CreateWindow(Config)
 
 	WindUI.Transparent = Config.Transparent
 	WindUI.Window = Window
-
-	if Config.Acrylic then
-		Acrylic.init()
-	end
 
 	-- function Window:ToggleTransparency(Value)
 	--     WindUI.Transparent = Value

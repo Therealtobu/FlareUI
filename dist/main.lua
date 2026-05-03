@@ -3158,7 +3158,7 @@ end
 local function createAcrylicBlur(ag)
 local ah={}
 
-ag=ag or 0.001
+ag=ag or 0.2
 local ai={
 topLeft=Vector2.new(),
 topRight=Vector2.new(),
@@ -11541,6 +11541,7 @@ Size=UDim2.new(1,-au.UIElements.SideBarContainer.AbsoluteSize.X,1,-4),
 Position=UDim2.new(1,0,1,0),
 AnchorPoint=Vector2.new(1,1),
 BackgroundTransparency=1,
+ZIndex=10000,
 },{
 al.NewRoundFrame(au.UICorner-(au.UIPadding/2),"Squircle",{
 Size=UDim2.new(1,0,1,0),
@@ -12024,7 +12025,7 @@ Size=UDim2.new(0,120,0,36),
 Position=UDim2.new(1,-(au.UIPadding),0,au.UIPadding/2),
 AnchorPoint=Vector2.new(1,0),
 BackgroundTransparency=1,
-ZIndex=9999,
+ZIndex=10001,
 Active=false,
 Name="FloatingButtons",
 },{
@@ -13918,14 +13919,13 @@ task.wait()
 until b
 end
 
+if aA.Acrylic then
+aq.init()
+end
 local h=aB(aA)
 
 aa.Transparent=aA.Transparent
 aa.Window=h
-
-if aA.Acrylic then
-aq.init()
-end
 
 
 

@@ -36,7 +36,7 @@ end
 local function createAcrylicBlur(distance)
 	local cleanups = {}
 
-	distance = distance or 0.001
+	distance = distance or 0.2
 	local positions = {
 		topLeft = Vector2.new(),
 		topRight = Vector2.new(),

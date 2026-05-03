@@ -278,6 +278,7 @@ return function(Config)
 		Position = UDim2.new(1, 0, 1, 0),
 		AnchorPoint = Vector2.new(1, 1),
 		BackgroundTransparency = 1,
+		ZIndex = 10000,
 	}, {
 		Creator.NewRoundFrame(Window.UICorner - (Window.UIPadding / 2), "Squircle", {
 			Size = UDim2.new(1, 0, 1, 0),
@@ -761,7 +762,7 @@ return function(Config)
 				Position = UDim2.new(1, -(Window.UIPadding), 0, Window.UIPadding / 2),
 				AnchorPoint = Vector2.new(1, 0),
 				BackgroundTransparency = 1,
-				ZIndex = 9999,
+				ZIndex = 10001,
 				Active = false,
 				Name = "FloatingButtons",
 			}, {
